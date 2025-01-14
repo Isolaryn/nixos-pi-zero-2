@@ -19,6 +19,7 @@
   nixpkgs.hostPlatform = "aarch64-linux";
   # ! Need a trusted user for deploy-rs.
   nix.settings.trusted-users = ["@wheel"];
+  nix.settings.experimental-features = "nix-command flakes";
   system.stateVersion = "24.05";
 
   zramSwap = {
@@ -72,6 +73,8 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi02w;
+    # Prevent rebuilds of kfs-kernel
+    supportedFilesystems.zfs = lib.mkForce false;
 
     initrd.availableKernelModules = ["xhci_pci" "usbhid" "usb_storage"];
     loader = {
